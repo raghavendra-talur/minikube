@@ -17,7 +17,7 @@ require (
 	github.com/cenkalti/backoff/v4 v4.1.3
 	github.com/cheggaaa/pb/v3 v3.0.8
 	github.com/cloudevents/sdk-go/v2 v2.9.0
-	github.com/docker/docker v20.10.15+incompatible
+	github.com/docker/docker v23.0.1+incompatible
 	github.com/docker/go-units v0.4.0
 	github.com/docker/machine v0.16.2
 	github.com/elazarl/goproxy v0.0.0-20210110162100-a92cc753f88e
@@ -51,7 +51,6 @@ require (
 	github.com/mattn/go-isatty v0.0.14
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/moby/hyperkit v0.0.0-20210108224842-2f061e447e14
-	github.com/moby/sys/mount v0.2.0 // indirect
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/otiai10/copy v1.7.0
@@ -78,7 +77,7 @@ require (
 	golang.org/x/mod v0.6.0-dev.0.20220106191415-9b9b3d81d5e3
 	golang.org/x/oauth2 v0.0.0-20220411215720-9780585627b5
 	golang.org/x/sync v0.0.0-20210220032951-036812b2e83c
-	golang.org/x/sys v0.0.0-20220503163025-988cb79eb6c6
+	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211
 	golang.org/x/text v0.3.7
 	gonum.org/v1/plot v0.11.0
@@ -123,7 +122,6 @@ require (
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
 	github.com/census-instrumentation/opencensus-proto v0.3.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
-	github.com/containerd/cgroups v1.0.1 // indirect
 	github.com/containerd/containerd v1.5.2 // indirect
 	github.com/containerd/stargz-snapshotter/estargz v0.7.0 // indirect
 	github.com/coreos/go-systemd/v22 v22.3.2 // indirect
@@ -179,8 +177,10 @@ require (
 	github.com/mitchellh/go-testing-interface v1.0.0 // indirect
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
 	github.com/mitchellh/mapstructure v1.4.3 // indirect
+	github.com/moby/patternmatcher v0.5.0 // indirect
 	github.com/moby/spdystream v0.2.0 // indirect
 	github.com/moby/sys/mountinfo v0.4.1 // indirect
+	github.com/moby/sys/sequential v0.5.0 // indirect
 	github.com/moby/term v0.0.0-20210619224110-3f7ff695adc6 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
