@@ -285,7 +285,7 @@ func (d *Driver) Create() error {
 		log.Info("Creating extra disk images...")
 		for i := 0; i < d.ExtraDisks; i++ {
 			path := pkgdrivers.ExtraDiskPath(d.BaseDriver, i)
-			if err := pkgdrivers.CreateRawDisk(path, d.DiskSize); err != nil {
+			if err := pkgdrivers.CreateRawDisk(path, d.DiskSize, "raw"); err != nil {
 				return err
 			}
 		}

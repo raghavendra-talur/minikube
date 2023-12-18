@@ -365,7 +365,7 @@ func (d *Driver) Create() (err error) {
 	}
 	for i := 0; i < d.ExtraDisks; i++ {
 		diskpath := pkgdrivers.ExtraDiskPath(d.BaseDriver, i)
-		if err := pkgdrivers.CreateRawDisk(diskpath, d.DiskSize); err != nil {
+		if err := pkgdrivers.CreateRawDisk(diskpath, d.DiskSize, "qcow2"); err != nil {
 			return errors.Wrap(err, "creating extra disks")
 		}
 		// Starting the logical names for the extra disks from hdd as the cdrom device is set to hdc.

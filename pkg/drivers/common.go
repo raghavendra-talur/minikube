@@ -21,8 +21,10 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"regexp"
+	"strconv"
 	"strings"
 	"syscall"
 
@@ -62,7 +64,7 @@ func ExtraDiskPath(d *drivers.BaseDriver, diskID int) string {
 //
 //	path := ExtraDiskPath(baseDriver, diskID)
 //	err := CreateRawDisk(path, baseDriver.DiskSize)
-func CreateRawDisk(diskPath string, sizeMB int) error {
+func CreateRawDisk(diskPath string, sizeMB int, diskType string) error {
 	log.Infof("Creating raw disk image: %s of size %vMB", diskPath, sizeMB)
 
 	_, err := os.Stat(diskPath)
@@ -71,16 +73,29 @@ func CreateRawDisk(diskPath string, sizeMB int) error {
 			// un-handle-able error stat-ing the disk file
 			return errors.Wrap(err, "stat")
 		}
-		// disk file does not exist; create it
-		file, err := os.OpenFile(diskPath, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0644)
-		if err != nil {
-			return errors.Wrap(err, "open")
-		}
-		defer file.Close()
 
-		if err := file.Truncate(util.ConvertMBToBytes(sizeMB)); err != nil {
-			return errors.Wrap(err, "truncate")
+		if diskType == "qcow2" {
+			cmd := exec.Command("qemu-img", "create", "-f", "qcow2", diskPath, strconv.Itoa(sizeMB)+"M")
+			cmd.Stderr = os.Stderr
+			if err := cmd.Run(); err != nil {
+				return errors.Wrap(err, "qemu-img create")
+			}
 		}
+
+		if diskType == "raw" {
+
+			// disk file does not exist; create it
+			file, err := os.OpenFile(diskPath, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0o644)
+			if err != nil {
+				return errors.Wrap(err, "open")
+			}
+			defer file.Close()
+
+			if err := file.Truncate(util.ConvertMBToBytes(sizeMB)); err != nil {
+				return errors.Wrap(err, "truncate")
+			}
+		}
+
 	}
 	return nil
 }
@@ -99,12 +114,15 @@ func (d *CommonDriver) SetConfigFromFlags(_ drivers.DriverOptions) error {
 }
 
 func createRawDiskImage(sshKeyPath, diskPath string, diskSizeMb int) error {
+	var diskPathOriginal string = diskPath
+	diskPath = diskPathOriginal + ".tmp"
+
 	tarBuf, err := mcnutils.MakeDiskImage(sshKeyPath)
 	if err != nil {
 		return errors.Wrap(err, "make disk image")
 	}
 
-	file, err := os.OpenFile(diskPath, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0644)
+	file, err := os.OpenFile(diskPath, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0o644)
 	if err != nil {
 		return errors.Wrap(err, "open")
 	}
@@ -123,6 +141,17 @@ func createRawDiskImage(sshKeyPath, diskPath string, diskSizeMb int) error {
 	if err := os.Truncate(diskPath, util.ConvertMBToBytes(diskSizeMb)); err != nil {
 		return errors.Wrap(err, "truncate")
 	}
+
+	cmd := exec.Command("qemu-img", "convert", "-f", "raw", "-O", "qcow2", diskPath, diskPathOriginal)
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		return errors.Wrap(err, "qemu-img convert")
+	}
+
+	if err := os.Remove(diskPath); err != nil {
+		return errors.Wrapf(err, "removing %s", diskPath)
+	}
+
 	return nil
 }
 

@@ -51,7 +51,7 @@ const domainTmpl = `
       <readonly/>
     </disk>
     <disk type='file' device='disk'>
-      <driver name='qemu' type='raw' cache='default' io='threads' />
+      <driver name='qemu' type='qcow2' cache='default' io='threads' />
       <source file='{{.DiskPath}}'/>
       <target dev='hda' bus='virtio'/>
     </disk>
